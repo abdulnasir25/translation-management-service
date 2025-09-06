@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('translations', function (Blueprint $table) {
+        Schema::create('translation_tags', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->index();
-            $table->text('value')->nullable();
-            $table->foreignId('language_id')->constrained()->onDelete('cascade');
+            $table->foreignId('translation_key_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tag_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['key', 'language_id']);
-            $table->index(['key', 'language_id', 'created_at']);
+            $table->unique(['translation_key_id', 'tag_id']);
+            $table->index(['tag_id', 'translation_key_id']);
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('translations');
+        Schema::dropIfExists('translation_tags');
     }
 };

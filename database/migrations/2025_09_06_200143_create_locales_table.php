@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('locales', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('code', 10)->unique(); // en, fr, es, etc.
+            $table->string('name', 100); // English, French, Spanish
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index(['is_active', 'code']);
         });
     }
 
@@ -23,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('locales');
     }
 };
