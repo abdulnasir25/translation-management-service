@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Tag extends Model
+class TranslationKey extends Model
 {
     protected $fillable = [
-        'name',
+        'key',
         'description',
         'is_active'
     ];
@@ -17,14 +18,18 @@ class Tag extends Model
         'is_active' => 'boolean'
     ];
 
-    public function translationKeys(): BelongsToMany
+    public function translations(): HasMany
     {
-        return $this->belongsToMany(TranslationKey::class, 'translation_tags');
+        return $this->hasMany(Translation::class);
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'translation_tags');
     }
 
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
-
 }

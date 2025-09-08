@@ -3,21 +3,34 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Language;
-use App\Models\Tag;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Translation extends Model
 {
-    protected $fillable = ['key', 'value', 'language_id'];
+    protected $fillable = [
+        'translation_key_id',
+        'locale_id',
+        'content',
+        'is_active'
+    ];
 
-    public function language()
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
+
+    public function translationKey(): BelongsTo
     {
-        return $this->belongsTo(Language::class);
+        return $this->belongsTo(TranslationKey::class);
     }
 
-    public function tags()
+    public function locale(): BelongsTo
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsTo(Locale::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 
 }
